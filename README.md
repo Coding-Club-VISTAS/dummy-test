@@ -103,82 +103,13 @@ To avoid running unnecessary tests, **please delete the test entries in the work
 If you're using **C**, the workflow file should look like this:
 
 ```yaml
-jobs:
-  autograding:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Make Shell Scripts Executable
-        run: |
-          chmod +x ./c/test_divisible_by_5.sh
-          chmod +x ./c/test_sum.sh
-
-      - name: Compile and Test C Programs - Divisibility by 5
-        id: divisibility-test
-        uses: classroom-resources/autograding-io-grader@v1
-        with:
-          test-name: Divisibility by 5 Test
-          command: "./c/test_divisible_by_5.sh"
-          input: 10
-          expected-output: "TRUE"
-          comparison-method: exact
-          timeout: 10
-          max-score: 10
-
-      - name: Compile and Test C Programs - Sum Function
-        id: sum-test
-        uses: classroom-resources/autograding-io-grader@v1
-        with:
-          test-name: Sum Function Test
-          command: "./c/test_sum.sh"
-          input: "5, 7"
-          expected-output: "Sum: 12"
-          comparison-method: exact
-          timeout: 10
-          max-score: 10
-
-      - name: Autograding Reporter
-        uses: classroom-resources/autograding-grading-reporter@v1
-        env:
-          DIVISIBILITY-TEST_RESULTS: "${{steps.divisibility-test.outputs.result}}"
-          SUM-TEST_RESULTS: "${{steps.sum-test.outputs.result}}"
+runners: divisibility-test,sum-test
 ```
 
 For **Python**, your workflow file would look like this:
 
 ```yaml
-jobs:
-  autograding:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Python Test for Divisibility by 5
-        id: python-divisibility-test
-        uses: classroom-resources/autograding-python-grader@v1
-        with:
-          test-name: Python Divisibility Test
-          command: python3 python/test_divisible_by_5.py
-          timeout: 10
-          max-score: 10
-
-      - name: Run Python Test for Sum Function
-        id: python-sum-test
-        uses: classroom-resources/autograding-python-grader@v1
-        with:
-          test-name: Python Sum Test
-          command: python3 python/test_sum.py
-          timeout: 10
-          max-score: 10
-
-      - name: Autograding Reporter
-        uses: classroom-resources/autograding-grading-reporter@v1
-        env:
-          PYTHON-DIVISIBILITY-TEST_RESULTS: "${{steps.python-divisibility-test.outputs.result}}"
-          PYTHON-SUM-TEST_RESULTS: "${{steps.python-sum-test.outputs.result}}"
+runners: python-divisibility-test,python-sum-test
 ```
 
 ## How to Trigger a Manual Test
